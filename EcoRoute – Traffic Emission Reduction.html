@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EcoRoute – Traffic Emission Reduction</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf5ee;--pn:#fff;--tx:#10231a;--mu:#52695c;--ac:#13896b;--ok:#17a35f;--wa:#e0a020;--bd:#cfe3d6;--bad:#d9534f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0b1a14;--pn:#13271e;--tx:#e6f3ea;--mu:#8fb09c;--ac:#3fd1a0;--ok:#5be08f;--wa:#f2b84b;--bd:#233f31}}
+:root[data-theme=dark]{--bg:#0b1a14;--pn:#13271e;--tx:#e6f3ea;--mu:#8fb09c;--ac:#3fd1a0;--ok:#5be08f;--wa:#f2b84b;--bd:#233f31}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Outfit,system-ui,sans-serif}body{min-height:100%;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+/* animated background */
+.bgl{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bl{position:absolute;background:radial-gradient(circle at 30% 30%,var(--ok),var(--ac));opacity:.22;border-radius:60% 40% 55% 45%/50% 60% 40% 50%;animation:mo 14s ease-in-out infinite,dr 26s ease-in-out infinite alternate}
+.bl:nth-child(2){opacity:.16;animation-duration:18s,32s;animation-delay:-4s}.bl:nth-child(3){opacity:.2;animation-duration:11s,22s}
+@keyframes mo{50%{border-radius:30% 70% 40% 60%/60% 35% 65% 40%}}@keyframes dr{to{transform:translate(40px,-60px) rotate(40deg) scale(1.15)}}
+.dd{position:absolute;width:56px;height:56px;color:var(--ok);opacity:.45;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;animation:wb 6s ease-in-out infinite}
+@keyframes wb{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-16px) rotate(10deg)}}
+.road{position:absolute;left:0;bottom:70px;width:100%;height:60px;fill:none;stroke:var(--ok);stroke-width:3;stroke-dasharray:10 14;opacity:.35;animation:rd 3s linear infinite}@keyframes rd{to{stroke-dashoffset:-48}}
+.app{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:16px 16px 96px}
+.view{display:none}.view.on{display:block;animation:in .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+h1{font-size:30px;font-weight:800;margin:0 0 4px;letter-spacing:-.5px}h2{font-size:18px;margin:0 0 10px}
+p{color:var(--mu);margin:0 0 12px;line-height:1.45}
+.card{background:color-mix(in srgb,var(--pn) 88%,transparent);backdrop-filter:blur(8px);border:1px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:14px;transition:transform .25s,border-color .25s}
+.row{display:flex;gap:10px;align-items:center}.sp{justify-content:space-between}.g{flex:1}
+input,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);margin:5px 0 10px;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 25%,transparent)}
+input[type=checkbox]{width:auto;margin:0 8px 0 0;accent-color:var(--ac)}input[type=range]{padding:0;margin:4px 0 12px}
+label{font-size:13px;color:var(--mu)}.chk{display:flex;align-items:center;padding:6px 0;color:var(--tx);font-size:15px}
+.btn{border:0;background:var(--ac);color:#fff;font-weight:600;padding:13px 18px;border-radius:14px;cursor:pointer;width:100%;transition:transform .15s,filter .2s}
+.btn:hover{filter:brightness(1.1)}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.s{width:auto;padding:8px 14px;font-size:14px}.btn.o{background:transparent;color:var(--ac);border:1px solid var(--ac)}
+.seg{display:flex;background:var(--bg);border-radius:14px;padding:4px;margin-bottom:12px;border:1px solid var(--bd)}
+.seg button{flex:1;border:0;background:none;padding:10px;border-radius:11px;cursor:pointer;font-weight:600;color:var(--mu);transition:all .25s}.seg button.on{background:var(--ac);color:#fff}
+#login{min-height:85vh;display:none;flex-direction:column;justify-content:center}#login.on{display:flex}
+.logo{width:68px;height:68px;border-radius:22px;background:linear-gradient(135deg,var(--ok),var(--ac));display:grid;place-items:center;font-size:34px;margin-bottom:16px;animation:fl 4s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-8px) rotate(5deg)}}
+.hint{font-size:12.5px;color:var(--mu);background:var(--bg);padding:10px;border-radius:10px;margin-top:12px;line-height:1.6}.err{color:var(--bad);font-size:13px;min-height:18px;margin-bottom:6px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.chip{font-size:12px;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--ac) 18%,transparent);color:var(--ac);font-weight:600;display:inline-block}
+.icb{border:1px solid var(--bd);background:var(--pn);width:38px;height:38px;border-radius:12px;cursor:pointer;font-size:17px}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--pn);border-top:1px solid var(--bd);display:none;justify-content:center;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));z-index:9}
+nav.on{display:flex}nav .in{display:flex;max-width:560px;width:100%}
+nav button{flex:1;border:0;background:none;padding:6px 2px;color:var(--mu);cursor:pointer;font-size:11.5px;transition:color .2s,transform .2s}nav button b{display:block;font-size:20px;font-weight:400}nav button.on{color:var(--ac);transform:translateY(-3px)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{border:1px solid var(--bd);background:color-mix(in srgb,var(--pn) 88%,transparent);border-radius:22px;padding:20px 14px;text-align:left;cursor:pointer;transition:transform .25s}
+.tile:hover{transform:translateY(-4px) rotate(-1deg)}.tile b{display:block;font-size:34px;font-weight:400;animation:wb 5s ease-in-out infinite}.tile span{font-weight:600}.tile small{display:block;color:var(--mu);margin-top:2px}
+.gm{isolation:isolate;position:relative;height:300px;border-radius:14px;overflow:hidden;background:var(--bg);border:1px solid var(--bd)}.nomap{padding:18px;color:var(--mu);font-size:14px;line-height:1.5}
+.gm{touch-action:none;user-select:none;-webkit-user-select:none;background:var(--bg) repeating-linear-gradient(0deg,transparent 0 39px,var(--bd) 39px 40px),repeating-linear-gradient(90deg,transparent 0 39px,var(--bd) 39px 40px)}
+.tl{position:absolute;inset:0}.tl img{position:absolute;width:256px;height:256px;max-width:none}
+.mo{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mz,.ml{position:absolute;top:8px;display:flex;flex-direction:column;gap:4px;z-index:3}.mz{left:8px}.ml{right:8px}
+.mz button,.ml button{border:1px solid var(--bd);background:var(--pn);border-radius:9px;cursor:pointer;color:var(--tx)}.mz button{width:34px;height:34px;font-size:19px}.ml button{padding:5px 9px;font-size:12px}.ml button.on{background:var(--ac);color:#fff}
+.at{position:absolute;left:6px;bottom:4px;font-size:10px;background:#ffffffb0;color:#333;padding:1px 5px;border-radius:5px;z-index:3}
+.rt{cursor:pointer;border:2px solid var(--bd)}.rt.on{border-color:var(--ok);transform:scale(1.015)}
+.bar{height:8px;border-radius:9px;background:var(--bg);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;border-radius:9px;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.big{font-size:32px;font-weight:800}.ok{color:var(--ok)}.wa{color:var(--wa)}.bad{color:var(--bad)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid .card{margin:0;text-align:center}
+.pr{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}.pr:last-child{border:0}
+.av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ok));display:grid;place-items:center;color:#fff;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{text-align:left;padding:8px 4px;border-bottom:1px solid var(--bd)}
+.warn{background:color-mix(in srgb,var(--bad) 14%,transparent);border:1px solid var(--bad);border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:14px}
+.sw{position:relative;width:54px;height:30px;flex:none}.sw input{opacity:0;position:absolute;inset:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}.sw i{position:absolute;inset:0;border-radius:99px;background:var(--bd);transition:.3s}.sw i:after{content:"";position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.3s}.sw input:checked+i{background:var(--ok)}.sw input:checked+i:after{transform:translateX(24px)}
+.toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,30px);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:99px;opacity:0;transition:all .35s;z-index:20;pointer-events:none;font-size:14px;max-width:90%}.toast.on{opacity:1;transform:translate(-50%,0)}
+.eq{display:inline-flex;gap:2px;align-items:flex-end;height:14px}.eq i{width:3px;background:var(--ok);animation:eq .8s infinite ease-in-out;border-radius:2px}.eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}.muted .eq i{animation:none;height:3px}
+@keyframes eq{0%,100%{height:3px}50%{height:14px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="bgl">
+ <div class="bl" style="width:340px;height:340px;left:-90px;top:-80px"></div><div class="bl" style="width:280px;height:280px;right:-70px;top:34%"></div><div class="bl" style="width:360px;height:360px;left:20%;bottom:-140px"></div>
+ <svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="leaf" viewBox="0 0 56 56"><path d="M10 46C8 22 24 8 46 10 48 32 34 48 10 46ZM10 46L32 24"/></symbol>
+  <symbol id="car" viewBox="0 0 56 56"><path d="M6 36v-8l6-10h24l8 10h6v8M6 36h44"/><circle cx="16" cy="38" r="5"/><circle cx="40" cy="38" r="5"/><path d="M14 28h26"/></symbol>
+  <symbol id="cloud" viewBox="0 0 56 56"><path d="M14 40a9 9 0 010-18 12 12 0 0123-3 10 10 0 013 21Z"/></symbol>
+  <symbol id="loop" viewBox="0 0 56 56"><path d="M6 36c8-24 14 8 22-4s8-18 0-14 2 24 22 6"/></symbol>
+  <symbol id="spark" viewBox="0 0 56 56"><path d="M28 6v14M28 36v14M6 28h14M36 28h14M14 14l8 8M34 34l8 8M42 14l-8 8M22 34l-8 8"/></symbol>
+ </defs></svg>
+ <svg class="dd" style="left:6%;top:14%"><use href="#leaf"/></svg><svg class="dd" style="right:8%;top:10%;animation-delay:-2s"><use href="#cloud"/></svg>
+ <svg class="dd" style="left:14%;top:52%;animation-delay:-3s"><use href="#car"/></svg><svg class="dd" style="right:10%;top:62%;animation-delay:-1s"><use href="#loop"/></svg>
+ <svg class="dd" style="left:46%;top:30%;animation-delay:-4s;width:40px;height:40px"><use href="#spark"/></svg><svg class="dd" style="right:30%;bottom:20%;animation-delay:-5s"><use href="#leaf"/></svg>
+ <svg class="road" viewBox="0 0 400 60" preserveAspectRatio="none"><path d="M0 30C60 0 120 60 200 30S340 0 400 30"/></svg>
+</div>
+<div class="app">
+<section id="login" class="view on">
+ <div class="logo">🌿</div><h1>EcoRoute</h1><p>Greener routes, smarter commute times and carpools for Indian cities.</p>
+ <div class="card">
+  <div class="seg" id="roleSeg"><button class="on" data-r="user">User</button><button data-r="admin">Admin</button></div>
+  <label>Username</label><input id="lu" autocomplete="username" value="user">
+  <label>Password</label><input id="lp" type="password" autocomplete="current-password" value="user123">
+  <div class="err" id="le"></div>
+  <button class="btn" id="lb">Log in</button>
+  <button class="btn o" id="rb" style="margin-top:10px">Create a user account</button>
+  <div class="hint">Demo logins: <b>user / user123</b> and <b>admin / admin123</b>.</div>
+ </div>
+</section>
+<div id="main" style="display:none">
+ <div class="top"><div class="chip" id="who"></div>
+  <div class="row"><button class="icb" id="mus" title="Music on/off"><span class="eq"><i></i><i></i><i></i></span></button><button class="icb" id="out" title="Log out">⎋</button></div></div>
+
+ <section id="v-home" class="view"><h1 id="hi"></h1><p id="hsub"></p><div id="hst"></div><div class="tiles" id="tiles"></div></section>
+
+ <section id="v-plan" class="view"><h1>Plan a trip</h1><div id="pban"></div>
+  <div class="card"><label>From</label><input id="pf" value="Kanpur Central Railway Station"><label>To</label><input id="pt" value="IIT Kanpur">
+   <label>Vehicle</label><select id="ve"></select><button class="btn" id="find">Find routes</button></div>
+  <div class="card"><div class="gm" id="map1"></div><p style="margin:8px 0 0;font-size:12.5px">Use the buttons on the map for Satellite view, drag to move, pinch or scroll to zoom. Traffic is estimated from the time of day.</p></div>
+  <div id="routes"></div><button class="btn" id="go" disabled>Start this trip</button>
+ </section>
+
+ <section id="v-car" class="view"><h1>Carpool</h1><p>Lock in your ride and share the emissions with people heading your way.</p><div id="cbody"></div></section>
+
+ <section id="v-imp" class="view"><h1>My impact</h1><p>CO₂ saved compared with the fastest route.</p><div class="grid" id="impg"></div><div class="card" style="margin-top:14px"><h2>Trip history</h2><div id="hist"></div></div></section>
+
+ <section id="v-adm" class="view"><h1>Admin controls</h1><p>City stats, carpool access and air quality restrictions.</p><div class="grid" id="ag"></div>
+  <div class="card" style="margin-top:14px"><div class="row sp"><div><h2 style="margin:0">Carpooling feature</h2><p style="margin:0">Users can only lock in rides while this is on.</p></div><label class="sw"><input type="checkbox" id="cpt"><i></i></label></div></div>
+  <div class="card"><h2>AQI vehicle restrictions</h2><label>Current AQI</label><input id="aqi" type="number" min="0" max="999">
+   <div class="chk"><label class="sw" style="margin-right:10px"><input type="checkbox" id="rn"><i></i></label>Enforce restrictions for users</div><label style="display:block;margin-top:6px">Restricted vehicle types</label><div id="rv"></div></div>
+ </section>
+ <section id="v-hot" class="view"><h1>Hotspots</h1><p>Name a spot, set its AQI, then tap the map to drop it.</p>
+  <div class="card"><div class="row"><div class="g"><label>Name</label><input id="hn" placeholder="e.g. Rawatpur crossing"></div><div style="width:100px"><label>AQI</label><input id="ha" type="number" value="280"></div></div><div class="gm" id="map2"></div></div>
+  <div class="card"><h2>Active hotspots</h2><div id="hl"></div></div></section>
+ <section id="v-usr" class="view"><h1>Users</h1><p>Everyone with access to EcoRoute.</p><div class="card"><table id="ut"></table></div></section>
+ <section id="v-set" class="view"><h1>Settings</h1>
+  <div class="card"><h2>Maps</h2><p>Free, no API key needed: OpenStreetMap streets, Esri satellite imagery, OSRM routing and Nominatim place search.</p></div>
+  <div class="card"><h2>Emission factors (g CO₂ per km)</h2><div id="fac"></div></div><button class="btn o" id="rst">Reset factors</button></section>
+</div></div>
+<nav id="nav"><div class="in" id="navin"></div></nav><div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],mem={};
+const S={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):(k in mem?mem[k]:d)}catch(e){return k in mem?mem[k]:d}},set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const DEF={"Petrol car":170,"Diesel car":150,"CNG car":120,"Electric car":50,"Scooter":55,"Bus (per rider)":30};
+let F=S.get("tm_f",{...DEF}),user=null,role="user",routes=[],sel=0,polys=[];
+const R_=()=>S.get("tm_r",{on:false,aqi:320,veh:["Petrol car","Diesel car"]}),CP=()=>S.get("tm_cp",{on:false});
+const users=()=>S.get("tm_u",[{n:"admin",p:"admin123",r:"admin"},{n:"user",p:"user123",r:"user"}]),logs=()=>S.get("tm_l",[]),hots=()=>S.get("tm_h",[]),pool=()=>S.get("tm_pool",[]);
+const blocked=v=>R_().on&&R_().veh.includes(v);
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),2600)}
+const cl=c=>c<.4?"var(--ok)":c<.7?"var(--wa)":"var(--bad)",aqc=a=>a<100?"#17a35f":a<200?"#e0a020":a<300?"#e4701e":"#d9534f";
+
+/* ---------- Built-in map (no library, no key): OSM / Esri tiles drawn by this script ---------- */
+const PROF=[.1,.08,.06,.06,.1,.2,.4,.7,.95,.85,.6,.5,.55,.5,.5,.55,.7,.9,1,.85,.6,.4,.25,.15],maps={};
+const TU={street:["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],sat:["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],satlab:["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}","https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"]};
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+class MM{
+ constructor(el){this.el=el;this.z=12;this.c=[26.4499,80.3319];this.base="street";this.items=[];this.T={};this.cbs=[];this.P=new Map();this.mv=0;
+  el.innerHTML='<div class="tl"></div><svg class="mo"></svg><div class="mz"><button data-z="1" aria-label="Zoom in">+</button><button data-z="-1" aria-label="Zoom out">−</button></div><div class="ml"><button data-b="street" class="on">Street</button><button data-b="sat">Satellite</button><button data-b="satlab">Sat + labels</button></div><div class="at">© OpenStreetMap · Imagery © Esri</div>';
+  this.tl=el.querySelector(".tl");this.sv=el.querySelector("svg");
+  el.querySelectorAll("[data-z]").forEach(b=>b.onclick=()=>this.zoom(+b.dataset.z));
+  el.querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>{this.base=b.dataset.b;el.querySelectorAll("[data-b]").forEach(x=>x.classList.toggle("on",x===b));this.render()});
+  el.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;this.P.set(e.pointerId,[e.clientX,e.clientY]);this.mv=0;this.dn=e.target;this.pd=0});
+  el.addEventListener("pointermove",e=>{const p=this.P.get(e.pointerId);if(!p)return;
+   if(this.P.size===2){const o=[...this.P.entries()].find(x=>x[0]!==e.pointerId)[1],d=Math.hypot(e.clientX-o[0],e.clientY-o[1]);if(!this.pd)this.pd=d;else if(d/this.pd>1.6){this.zoom(1);this.pd=d}else if(d/this.pd<.62){this.zoom(-1);this.pd=d}this.P.set(e.pointerId,[e.clientX,e.clientY]);this.mv+=20;return}
+   const dx=e.clientX-p[0],dy=e.clientY-p[1];this.mv+=Math.abs(dx)+Math.abs(dy);const q=this.px(...this.c);this.c=this.ll(q[0]-dx,q[1]-dy);this.P.set(e.pointerId,[e.clientX,e.clientY]);this.render()});
+  const up=e=>{if(!this.P.has(e.pointerId))return;this.P.delete(e.pointerId);if(this.mv<8&&e.type==="pointerup"&&!e.target.closest("button")){const i=this.dn&&this.dn.dataset&&this.dn.dataset.i;if(i!==undefined&&this.items[i]&&this.items[i].cb)return this.items[i].cb();const r=el.getBoundingClientRect(),q=this.px(...this.c),l=this.ll(q[0]+e.clientX-r.left-r.width/2,q[1]+e.clientY-r.top-r.height/2);this.cbs.forEach(f=>f({latlng:{lat:l[0],lng:l[1]}}))}};
+  el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up);
+  el.addEventListener("wheel",e=>{e.preventDefault();const t=Date.now();if(t-(this.wt||0)>220){this.wt=t;this.zoom(e.deltaY<0?1:-1)}},{passive:false});
+  el.addEventListener("dblclick",()=>this.zoom(1));
+  if(window.ResizeObserver)new ResizeObserver(()=>this.render()).observe(el);}
+ px(la,lo,z=this.z){const s=256*2**z,r=la*Math.PI/180;return[(lo+180)/360*s,(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*s]}
+ ll(x,y,z=this.z){const s=256*2**z,n=Math.PI-2*Math.PI*y/s;return[180/Math.PI*Math.atan(Math.sinh(n)),x/s*360-180]}
+ on(ev,cb){this.cbs.push(cb)}
+ zoom(d){this.z=Math.max(3,Math.min(18,this.z+d));this.render()}
+ clear(tag){this.items=this.items.filter(i=>i.tag!==tag)}
+ fit(pts){let a=90,b=-90,c=180,d=-180;pts.forEach(p=>{a=Math.min(a,p[0]);b=Math.max(b,p[0]);c=Math.min(c,p[1]);d=Math.max(d,p[1])});const w=(this.el.clientWidth||300)-70,h=(this.el.clientHeight||300)-70;let z=18;for(;z>3;z--){const p1=this.px(b,c,z),p2=this.px(a,d,z);if(p2[0]-p1[0]<w&&p2[1]-p1[1]<h)break}this.z=z;this.c=[(a+b)/2,(c+d)/2];this.render()}
+ render(){const w=this.el.clientWidth,h=this.el.clientHeight;if(!w||!h)return;const z=this.z,n=2**z,q=this.px(...this.c),ox=q[0]-w/2,oy=q[1]-h/2,used={};
+  TU[this.base].forEach((u,li)=>{for(let x=Math.floor(ox/256);x<=Math.floor((ox+w)/256);x++)for(let y=Math.floor(oy/256);y<=Math.floor((oy+h)/256);y++){if(y<0||y>=n)continue;const xx=(x%n+n)%n,url=u.replace("{z}",z).replace("{x}",xx).replace("{y}",y);let im=this.T[url+"@"+x];
+   if(!im){im=this.T[url+"@"+x]=new Image();im.alt="";im.draggable=false;im.onerror=()=>{im.style.visibility="hidden"};im.onload=()=>{if(!this.ok){this.ok=1;this.render()}};im.src=url;this.tl.appendChild(im)}
+   im.style.zIndex=li;im.style.left=(x*256-ox)+"px";im.style.top=(y*256-oy)+"px";used[url+"@"+x]=1}});
+  for(const k in this.T)if(!used[k]){this.T[k].remove();delete this.T[k]}
+  const P=p=>{const t=this.px(p[0],p[1]);return[(t[0]-ox).toFixed(1),(t[1]-oy).toFixed(1)]};
+  this.sv.innerHTML=this.items.map((it,i)=>{
+   if(it.bg&&this.ok)return"";
+   if(it.t==="l")return`<path d="M${it.pts.map(p=>P(p).join(",")).join("L")}" fill="none" stroke="${it.c}" stroke-width="${it.w}" stroke-opacity="${it.o}" stroke-linecap="round" stroke-linejoin="round"${it.cb?` data-i="${i}" style="pointer-events:stroke;cursor:pointer"`:""}/>`;
+   const p=P(it.pt);if(it.t==="t")return`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#4a6b57"/><text x="${+p[0]+6}" y="${+p[1]+4}" font-size="11" fill="#2f4a3a" stroke="#fff" stroke-width="3" paint-order="stroke">${esc(it.nm)}</text>`;if(it.t==="d")return`<circle cx="${p[0]}" cy="${p[1]}" r="9" fill="${it.c}" stroke="#fff" stroke-width="3"/>`;
+   const r=Math.max(8,it.r/(156543.03*Math.cos(it.pt[0]*Math.PI/180)/n));return`<circle cx="${p[0]}" cy="${p[1]}" r="${r}" fill="${it.c}" fill-opacity=".25" stroke="${it.c}" stroke-width="2"><title>${esc(it.tip)}</title></circle><text x="${p[0]}" y="${p[1]+4}" font-size="11" font-weight="700" text-anchor="middle" fill="#fff" stroke="#000" stroke-width=".5" paint-order="stroke">${esc(it.nm)}</text>`}).join("")}}
+const GZ={"kanpur central":[26.454,80.35],"iit kanpur":[26.5123,80.2329],"swaroop nagar":[26.47,80.333],"kakadeo":[26.443,80.30],"civil lines":[26.467,80.355],"govind nagar":[26.44,80.315],"rawatpur":[26.48,80.305],"kidwai nagar":[26.43,80.33],"chakeri":[26.4044,80.4101],"airport":[26.4044,80.4101],"jajmau":[26.416,80.40],"panki":[26.467,80.272]};
+const gz=q=>{q=q.toLowerCase();const k=Object.keys(GZ).filter(x=>q.includes(x)).sort((a,b)=>b.length-a.length)[0];return k?GZ[k]:null};
+function baseMap(m){m.items.push({t:"l",bg:1,tag:"b",pts:[[26.56,80.19],[26.53,80.27],[26.505,80.33],[26.485,80.395],[26.45,80.44]],c:"#7fb8e6",w:16,o:.8},
+ {t:"l",bg:1,tag:"b",pts:[[26.443,80.30],[26.454,80.35],[26.4044,80.4101]],c:"#c9d3cb",w:6,o:1},{t:"l",bg:1,tag:"b",pts:[[26.5123,80.2329],[26.48,80.305],[26.47,80.333],[26.454,80.35]],c:"#c9d3cb",w:6,o:1},{t:"l",bg:1,tag:"b",pts:[[26.43,80.33],[26.44,80.315],[26.443,80.30],[26.467,80.272]],c:"#c9d3cb",w:5,o:1});
+ [["Kanpur Central","kanpur central"],["IIT Kanpur","iit kanpur"],["Swaroop Nagar","swaroop nagar"],["Kakadeo","kakadeo"],["Civil Lines","civil lines"],["Govind Nagar","govind nagar"],["Rawatpur","rawatpur"],["Kidwai Nagar","kidwai nagar"],["Airport","chakeri"],["Jajmau","jajmau"]].forEach(x=>m.items.push({t:"t",bg:1,tag:"b",pt:GZ[x[1]],nm:x[0]}));
+ m.items.push({t:"t",bg:1,tag:"b",pt:[26.52,80.29],nm:"Ganga (schematic)"})}
+function getMap(id,cb){const el=$("#"+id);if(!maps[id]){maps[id]=new MM(el);baseMap(maps[id])}[0,80,300].forEach(t=>setTimeout(()=>maps[id].render(),t));cb(maps[id])}
+function drawHot(m){m.clear("h");hots().forEach(h=>m.items.push({t:"c",tag:"h",pt:[h.lat,h.lng],r:700,c:aqc(h.aqi),tip:h.name+" · AQI "+h.aqi,nm:h.name}));m.render()}
+async function geo(q){const g=gz(q);if(g)return g;const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=in&q="+encodeURIComponent(q)),j=await r.json();if(!j.length){const e=new Error("Could not find \""+q+"\". Try adding the city, e.g. \"Rawatpur, Kanpur\".");e.nf=1;throw e}return[+j[0].lat,+j[0].lon]}
+function syn(veh,from,to,a,b){let h=0;for(const c of from+to)h=(h*31+c.charCodeAt(0))%97;const R=Math.PI/180,hv=a&&b?6371*2*Math.asin(Math.sqrt(Math.sin((b[0]-a[0])*R/2)**2+Math.cos(a[0]*R)*Math.cos(b[0]*R)*Math.sin((b[1]-a[1])*R/2)**2))*1.35:4+h/6;
+ return[["Main route",1,42,1.1,0],["Eco Smart",1.1,38,.45,.2],["Balanced",1.04,40,.8,-.2]].map(x=>{const dist=Math.max(1.5,hv)*x[1],cong=Math.min(1,x[3]*.7),min=dist/(x[2]*(1-.5*cong))*60,r={k:x[0],dist,min,cong,g:F[veh]*dist*(1+.6*cong)};
+  if(a&&b){const mx=[(a[0]+b[0])/2-(b[1]-a[1])*x[4],(a[1]+b[1])/2+(b[0]-a[0])*x[4]];r.a=a;r.b=b;r.path=[...Array(17)].map((_,i)=>{const t=i/16;return[(1-t)**2*a[0]+2*t*(1-t)*mx[0]+t*t*b[0],(1-t)**2*a[1]+2*t*(1-t)*mx[1]+t*t*b[1]]})}return r})}
+
+/* ---------- BGM ---------- */
+const M={ctx:null,on:true,step:0,tempo:90,mood:.3,t:null},SC=[0,2,4,7,9,12,14,16],CH=[[0,4,7],[5,9,12],[7,11,14],[3,7,10]];
+function bgmStart(){try{if(!M.ctx){M.ctx=new(window.AudioContext||window.webkitAudioContext)();M.f=M.ctx.createBiquadFilter();M.f.type="lowpass";M.g=M.ctx.createGain();M.g.gain.value=.18;M.f.connect(M.g);M.g.connect(M.ctx.destination)}M.ctx.resume();bgmMood(M.mood)}catch(e){}}
+function bgmMood(c){M.mood=c;if(!M.ctx)return;M.f.frequency.setTargetAtTime(700+(1-c)*2600,M.ctx.currentTime,.8);M.tempo=Math.round(72+c*50);clearInterval(M.t);if(M.on)M.t=setInterval(tick,60000/M.tempo/2)}
+function note(fq,t,d,ty,v){const o=M.ctx.createOscillator(),g=M.ctx.createGain();o.type=ty;o.frequency.value=fq;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(M.f);o.start(t);o.stop(t+d+.05)}
+function tick(){if(!M.ctx||!M.on)return;const t=M.ctx.currentTime,s=M.step++,ch=CH[Math.floor(s/8)%4],m=x=>220*Math.pow(2,x/12);
+ if(s%8===0)ch.forEach(n=>note(m(n-12),t,60/M.tempo*4,"sine",.12));
+ if(Math.random()<.5||s%2===0&&M.mood>.6)note(m(ch[0]+SC[Math.floor(Math.random()*SC.length)]),t,.9,M.mood>.6?"triangle":"sine",.1);
+ if(M.mood>.5&&s%4===0)note(m(ch[0]-24),t,.25,"triangle",.14)}
+$("#mus").onclick=()=>{M.on=!M.on;$("#mus").classList.toggle("muted",!M.on);if(M.on)bgmStart();else clearInterval(M.t)};
+
+/* ---------- Auth and navigation ---------- */
+$$("#roleSeg button").forEach(b=>b.onclick=()=>{role=b.dataset.r;$$("#roleSeg button").forEach(x=>x.classList.toggle("on",x===b));$("#lu").value=role;$("#lp").value=role+"123"});
+$("#lb").onclick=()=>{const u=users().find(x=>x.n===$("#lu").value.trim()&&x.p===$("#lp").value);
+ if(!u)return $("#le").textContent="Wrong username or password.";if(u.r!==role)return $("#le").textContent="This is a "+u.r+" account. Switch the role above.";
+ S.set("tm_s",u.n);enter(u);bgmStart()};
+$("#rb").onclick=()=>{const n=$("#lu").value.trim(),p=$("#lp").value;if(role==="admin")return $("#le").textContent="Admin accounts can't be self-created.";
+ if(n.length<3||p.length<4)return $("#le").textContent="Use a name of 3+ letters and a password of 4+ characters.";const a=users();if(a.find(x=>x.n===n))return $("#le").textContent="That username is taken.";
+ a.push({n,p,r:"user"});S.set("tm_u",a);$("#le").textContent="";toast("Account created. Log in now.")};
+$("#out").onclick=()=>{S.set("tm_s",null);user=null;clearInterval(M.t);if(M.ctx)M.ctx.suspend();$("#main").style.display="none";$("#nav").classList.remove("on");show("login");toast("Logged out")};
+function enter(u){user=u;$("#le").textContent="";$("#who").textContent=u.n+" · "+u.r;$("#main").style.display="block";$("#nav").classList.add("on");
+ const tabs=u.r==="admin"?[["home","🏠","Home"],["adm","🎛️","Controls"],["hot","📍","Hotspots"],["usr","👥","Users"],["set","⚙️","Settings"]]:[["home","🏠","Home"],["plan","🗺️","Plan"],["car","🚗","Carpool"],["imp","🌱","Impact"]];
+ $("#navin").innerHTML=tabs.map(t=>`<button data-t="${t[0]}"><b>${t[1]}</b>${t[2]}</button>`).join("");$$("#navin button").forEach(b=>b.onclick=()=>show("v-"+b.dataset.t));
+ const T=u.r==="admin"?tabs.slice(1):tabs.slice(1);$("#tiles").innerHTML=T.map(t=>`<button class="tile" data-go="v-${t[0]}"><b>${t[1]}</b><span>${t[2]}</span><small>${{plan:"Compare routes",car:"Lock in a ride",imp:"CO₂ saved",adm:"Carpool and AQI",hot:"Map hotspots",usr:"Manage people",set:"API key, factors"}[t[0]]}</small></button>`).join("");
+ $$("#tiles .tile").forEach(b=>b.onclick=()=>show(b.dataset.go));show("v-home");toast("Welcome, "+u.n)}
+const V={"v-home":home,"v-plan":plan,"v-car":carv,"v-imp":impv,"v-adm":admv,"v-hot":hotv,"v-usr":usrv,"v-set":setv};
+function show(id){$$(".view").forEach(v=>v.classList.toggle("on",v.id===id));$$("#navin button").forEach(b=>b.classList.toggle("on","v-"+b.dataset.t===id));window.scrollTo({top:0,behavior:"smooth"});V[id]&&V[id]()}
+function home(){$("#hi").textContent="Hi "+user.n+" 👋";$("#hsub").textContent=user.r==="admin"?"Manage the city's air quality tools.":"Choose where to go next.";const r=R_();
+ $("#hst").innerHTML=`<div style="margin-bottom:14px"><span class="chip">Carpool ${CP().on?"on":"off"}</span> ${r.on?`<span class="chip" style="color:var(--bad)">AQI ${r.aqi} · restrictions on</span>`:'<span class="chip">No vehicle restrictions</span>'}</div>`;bgmMood(.3)}
+
+/* ---------- User: plan ---------- */
+const vopts=()=>$("#ve").innerHTML=Object.keys(DEF).map(k=>`<option value="${k}">${k}${blocked(k)?" ⛔ restricted":""}</option>`).join("");
+function plan(){const keep=$("#ve").value;vopts();if(keep)$("#ve").value=keep;const r=R_();
+ $("#pban").innerHTML=r.on?`<div class="warn">⚠️ AQI is ${r.aqi}. Restricted today: <b>${r.veh.join(", ")||"none"}</b>.</div>`:"";
+ getMap("map1",m=>{if(m)drawHot(m)});upd();if(!routes.length&&!plan._a){plan._a=1;setTimeout(find,500)}}
+$("#ve").onchange=()=>{routes.length?find():upd()};
+function find(){const veh=$("#ve").value,from=$("#pf").value.trim(),to=$("#pt").value.trim();if(!from||!to)return toast("Enter both places.");
+ getMap("map1",async m=>{const done=()=>{sel=routes.reduce((a,r,i)=>r.g<routes[a].g?i:a,0);draw(m)};
+  let a,b;try{toast("Finding routes...");a=await geo(from);b=await geo(to);const r=await fetch(`https://router.project-osrm.org/route/v1/driving/${a[1]},${a[0]};${b[1]},${b[0]}?alternatives=true&overview=full&geometries=geojson`),j=await r.json();if(j.code!=="Ok"){const e=new Error("No driving route found between those places.");e.nf=1;throw e}
+   const h=new Date().getHours();routes=j.routes.slice(0,3).map((x,i)=>{const dist=x.distance/1000,cong=Math.min(1,PROF[h]*[1.1,.8,.9][i]),min=x.duration/60/(1-.55*cong);return{k:i?"Alternative "+i:"Main route",dist,min,cong,g:F[veh]*dist*(1+.6*cong),path:x.geometry.coordinates.map(c=>[c[1],c[0]]),a,b}});done()}
+  catch(e){if(e.nf)return toast(e.message);routes=syn(veh,from,to,a,b);toast("Live route server unreachable. Showing estimated routes.");done()}})}
+$("#find").onclick=find;
+function draw(m){const fast=routes.reduce((a,r)=>r.min<a.min?r:a,routes[0]),best=routes.reduce((a,r)=>r.g<a.g?r:a,routes[0]);
+ $("#routes").innerHTML=routes.map((r,i)=>`<div class="card rt ${i===sel?"on":""}" data-i="${i}"><div class="row sp"><b>${r.k}${r===best?' <span class="chip">greenest</span>':""}${r===fast?' <span class="chip" style="color:var(--wa)">fastest</span>':""}</b><span class="${r.g<=fast.g?"ok":"wa"}">${(r.g/1000).toFixed(2)} kg CO₂</span></div><p style="margin:4px 0">${r.dist.toFixed(1)} km · ${Math.round(r.min)} min · traffic ${r.cong<.25?"light":r.cong<.5?"moderate":"heavy"}</p><div class="bar"><i style="width:0;background:${cl(r.cong*1.6)}" data-w="${r.cong*100}"></i></div></div>`).join("");
+ requestAnimationFrame(()=>requestAnimationFrame(()=>$$("#routes .bar i").forEach(i=>i.style.width=Math.max(6,i.dataset.w)+"%")));
+ $$("#routes .rt").forEach(c=>c.onclick=()=>{sel=+c.dataset.i;draw(m)});upd();bgmMood(routes[sel].cong*1.4);
+ if(m&&routes[0].path){m.clear("r");routes.forEach((r,i)=>i!==sel&&m.items.push({t:"l",tag:"r",pts:r.path,c:"#7a8a95",w:5,o:.7,cb:()=>{sel=i;draw(m)}}));m.items.push({t:"l",tag:"r",pts:routes[sel].path,c:"#17a35f",w:7,o:.95});[routes[0].a,routes[0].b].forEach((p,i)=>m.items.push({t:"d",tag:"r",pt:p,c:i?"#e0a020":"#13896b"}));drawHot(m);m.fit(routes[sel].path)}}
+function upd(){const b=blocked($("#ve").value);$("#go").disabled=!routes.length||b;$("#go").textContent=b?"This vehicle is restricted today":"Start this trip"}
+$("#go").onclick=()=>{const veh=$("#ve").value;if(blocked(veh))return toast("Restricted due to high AQI.");const c=routes[sel],fast=routes.reduce((a,r)=>r.min<a.min?r:a,routes[0]),saved=Math.max(0,fast.g-c.g);
+ const l=logs();l.push({u:user.n,from:$("#pf").value,to:$("#pt").value,r:c.k,g:c.g,s:saved,d:new Date().toLocaleDateString("en-IN")});S.set("tm_l",l);toast(saved>0?`Trip logged. You saved ${Math.round(saved)} g CO₂`:"Trip logged.")};
+
+/* ---------- User: carpool (separate section, admin-gated) ---------- */
+const NM=["Aarav","Priya","Rohit","Sneha","Vikram","Ananya"];
+function carv(){const b=$("#cbody");if(!CP().on){b.innerHTML='<div class="card" style="text-align:center"><div class="big">🔒</div><h2>Carpooling is switched off</h2><p>An admin has not enabled carpooling yet. Check back soon.</p></div>';return}
+ const me=pool().find(p=>p.u===user.n),others=pool().filter(p=>p.u!==user.n),J=S.get("tm_j",{}),n=Object.keys(J).filter(k=>J[k]).length;
+ b.innerHTML=`<div class="card"><h2>${me?"You are locked in":"Lock in a carpool"}</h2><label>From</label><input id="cf" value="${me?me.f:$("#pf").value}" ${me?"disabled":""}><label>To</label><input id="ct" value="${me?me.t:$("#pt").value}" ${me?"disabled":""}>
+  <div class="row"><div class="g"><label>Leave at</label><input id="ctm" type="time" value="${me?me.tm:"09:00"}" ${me?"disabled":""}></div><div class="g"><label>Seats free</label><input id="cs" type="number" min="1" max="6" value="${me?me.s:3}" ${me?"disabled":""}></div></div>
+  <button class="btn ${me?"o":""}" id="lock">${me?"Unlock my ride":"Lock in my ride"}</button></div>
+  <div class="card"><h2>Riders heading your way</h2><p>${n+1} people sharing means each person emits ${Math.round(100/(n+1))}% of the car's CO₂.</p>`+
+  [...others.map(o=>({nm:o.u,d:o.f+" → "+o.t,tm:o.tm})),...[0,1,2].map(i=>({nm:NM[(($("#pf").value.length)+i)%6],d:"Near "+$("#pf").value.split(",")[0],tm:["08:30","09:00","09:30"][i]}))].map(r=>`<div class="pr"><div class="av">${r.nm[0].toUpperCase()}</div><div class="g"><b>${r.nm}</b><p style="margin:0;font-size:13px">${r.d} · ${r.tm}</p></div><button class="btn s ${J[r.nm]?"o":""}" data-n="${r.nm}" ${me?"":"disabled"}>${J[r.nm]?"Joined":"Request"}</button></div>`).join("")+(me?"":"<p style='margin-top:8px'>Lock in your ride to request seats.</p>")+"</div>";
+ $("#lock").onclick=()=>{let P=pool();if(me){P=P.filter(p=>p.u!==user.n);toast("Ride unlocked")}else{P.push({u:user.n,f:$("#cf").value,t:$("#ct").value,tm:$("#ctm").value,s:+$("#cs").value});toast("Ride locked in")}S.set("tm_pool",P);carv()};
+ $$("#cbody [data-n]").forEach(x=>x.onclick=()=>{const j=S.get("tm_j",{});j[x.dataset.n]=!j[x.dataset.n];S.set("tm_j",j);toast(j[x.dataset.n]?"Request sent to "+x.dataset.n:"Request cancelled");carv()});bgmMood(.2)}
+function impv(){const L=logs().filter(l=>l.u===user.n),s=L.reduce((a,l)=>a+l.s,0),e=L.reduce((a,l)=>a+l.g,0);
+ $("#impg").innerHTML=[["Trips",L.length],["CO₂ saved",(s/1000).toFixed(2)+" kg"],["CO₂ emitted",(e/1000).toFixed(2)+" kg"],["Tree-days",(s/1000/.06).toFixed(0)]].map(x=>`<div class="card"><label>${x[0]}</label><div class="big ${x[0]==="CO₂ saved"?"ok":""}">${x[1]}</div></div>`).join("");
+ $("#hist").innerHTML=L.length?L.slice().reverse().map(l=>`<div class="pr"><div class="g"><b>${l.from} → ${l.to}</b><p style="margin:0;font-size:13px">${l.r} · ${l.d}</p></div><span class="ok">−${Math.round(l.s)} g</span></div>`).join(""):"<p>No trips yet. Plan a trip and tap Start this trip.</p>"}
+
+/* ---------- Admin ---------- */
+function admv(){const L=logs();$("#ag").innerHTML=[["Users",users().filter(u=>u.r==="user").length],["Trips logged",L.length],["CO₂ saved",(L.reduce((a,l)=>a+l.s,0)/1000).toFixed(1)+" kg"],["Locked-in rides",pool().length]].map(x=>`<div class="card"><label>${x[0]}</label><div class="big">${x[1]}</div></div>`).join("");
+ const r=R_();$("#cpt").checked=CP().on;$("#cpt").onchange=e=>{S.set("tm_cp",{on:e.target.checked});toast("Carpooling "+(e.target.checked?"enabled":"disabled"))};
+ $("#aqi").value=r.aqi;$("#rn").checked=r.on;$("#rv").innerHTML=Object.keys(DEF).map(k=>`<label class="chk"><input type="checkbox" data-v="${k}" ${r.veh.includes(k)?"checked":""}>${k}</label>`).join("");
+ const sv=()=>{S.set("tm_r",{on:$("#rn").checked,aqi:+$("#aqi").value||0,veh:$$("#rv input:checked").map(i=>i.dataset.v)});toast("Restrictions saved")};
+ $("#aqi").onchange=$("#rn").onchange=sv;$$("#rv input").forEach(i=>i.onchange=sv);bgmMood(.5)}
+function hotv(){getMap("map2",m=>{if(m){drawHot(m);if(!m._cl){m._cl=1;m.on("click",e=>{const H=hots();H.push({lat:e.latlng.lat,lng:e.latlng.lng,name:$("#hn").value.trim()||"Hotspot "+(H.length+1),aqi:+$("#ha").value||200});S.set("tm_h",H);drawHot(m);hl();toast("Hotspot added")})}}});hl()}
+function hl(){$("#hl").innerHTML=hots().length?hots().map((h,i)=>`<div class="pr"><span style="width:14px;height:14px;border-radius:50%;background:${aqc(h.aqi)}"></span><div class="g"><b>${h.name}</b><p style="margin:0;font-size:13px">AQI ${h.aqi}</p></div><button class="btn s o" data-d="${i}">Remove</button></div>`).join(""):"<p>No hotspots yet. Tap the map to add one.</p>";
+ $$("#hl [data-d]").forEach(b=>b.onclick=()=>{const H=hots();H.splice(+b.dataset.d,1);S.set("tm_h",H);if(maps.map2)drawHot(maps.map2);hl()})}
+function usrv(){const L=logs();$("#ut").innerHTML="<tr><th>User</th><th>Role</th><th>Trips</th><th></th></tr>"+users().map(u=>`<tr><td>${u.n}</td><td>${u.r}</td><td>${L.filter(l=>l.u===u.n).length}</td><td>${u.r==="admin"?"":`<button class="btn s o" data-d="${u.n}">Remove</button>`}</td></tr>`).join("");
+ $$("#ut [data-d]").forEach(b=>b.onclick=()=>{S.set("tm_u",users().filter(u=>u.n!==b.dataset.d));toast("Removed "+b.dataset.d);usrv()})}
+function setv(){$("#fac").innerHTML=Object.keys(F).map(k=>`<label>${k}: <b>${F[k]}</b></label><input type="range" min="10" max="300" value="${F[k]}" data-k="${k}">`).join("");
+ $$("#fac input").forEach(i=>i.oninput=()=>{F[i.dataset.k]=+i.value;i.previousElementSibling.querySelector("b").textContent=i.value;S.set("tm_f",F)})}
+$("#rst").onclick=()=>{F={...DEF};S.set("tm_f",F);setv();toast("Factors reset")};
+{const n=S.get("tm_s",null),u=n&&users().find(x=>x.n===n);if(u){role=u.r;enter(u);const o=()=>{bgmStart();removeEventListener("pointerdown",o)};addEventListener("pointerdown",o)}}
+</script></body></html>
